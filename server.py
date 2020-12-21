@@ -9,18 +9,29 @@ serv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 serv.bind(('0.0.0.0', 9999))
 serv.listen()
 
-def client_thread(sock):
-        while True:
-                input("awaiting for next command...")
-                print('sending 16 bytes...')
-                sock.sendall(b'\xfa' * 0x10)
-                print('16 bytes sent')
+socks = []
 
+def console_thread():
+  global socks
+  while True:
+    input("awaiting for next command...")
+    print('sending 16 bytes...')
+    print('0 /', len(socks), end='\r')
+    idx = 1
+    for sock in socks:
+      try:
+        print(idx, '/', len(socks), end='\r')
+        sock.sendall(b'\xfa' * 0x10)
+      except:
+        socks.remove(sock)
+      idx += 1
+    print('\n16 bytes sent')
+
+threading.Thread(target=console_thread).start()
 while True:
-	print('awaiting client...')
-	sock, addr = serv.accept()
-	print('client arrived from', addr)
-	thr = threading.Thread(name='client', target=client_thread, args=(sock, ))
-	thr.start()
+  print('awaiting client...')
+  sock, addr = serv.accept()
+  print('client arrived from', addr)
+  socks.append(sock)
 	
 
