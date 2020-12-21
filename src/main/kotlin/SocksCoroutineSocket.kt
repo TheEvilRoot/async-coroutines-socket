@@ -93,8 +93,9 @@ class SocksCoroutineSocket(
         val addressWithPort = addrType.consumeWithPort { buff -> super.read(buff) }
         val addr = ByteArray(4)
         val bPort = ByteArray(2)
+        addressWithPort.position(0)
         addressWithPort.get(addr, 0, 4)
-        addressWithPort.get(bPort, 4, 2)
+        addressWithPort.get(bPort, 0, 2)
         val port = (bPort[0].toUByte().toInt() shl 8) + bPort[1].toUByte().toInt()
         return InetSocketAddress(InetAddress.getByAddress(addr), port)
     }
@@ -136,13 +137,17 @@ class SocksCoroutineSocket(
     override suspend fun read(buffer: ByteBuffer): Int {
         if (!this::remoteIsa.isInitialized)
             throw IllegalStateException("remote address is not initialized. please, connect first")
-        return super.read(buffer).also { println("read: $it") }
+        return super.read(buffer).also {
+            if (it < 0) close()
+        }
     }
 
     override suspend fun write(buffer: ByteBuffer): Int {
         if (!this::remoteIsa.isInitialized)
             throw IllegalStateException("remote address is not initialized. please, connect first")
-        return super.write(buffer).also { println("write: $it") }
+        return super.write(buffer).also {
+            if (it < 0) close()
+        }
     }
 
 }
