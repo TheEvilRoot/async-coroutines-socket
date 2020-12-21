@@ -1,3 +1,5 @@
+package com.theevilroot.asyncsocket
+
 import java.io.IOException
 import java.net.ConnectException
 import java.net.InetAddress
@@ -105,8 +107,8 @@ class SocksCoroutineSocket(
 
     suspend fun init() {
         // First of all, we should just connect to socks server as usual
-        // SocksCoroutineSocket.init will used as CoroutineSocket.connect
-        // but SocksCoroutineSocket.connect will be used to send CONNECT
+        // com.theevilroot.asyncsocket.SocksCoroutineSocket.init will used as com.theevilroot.asyncsocket.CoroutineSocket.connect
+        // but com.theevilroot.asyncsocket.SocksCoroutineSocket.connect will be used to send CONNECT
         // command to socks server
         // So, connect should only be called after the init
         // And init is using super.connect(ISA) to use parent's connect

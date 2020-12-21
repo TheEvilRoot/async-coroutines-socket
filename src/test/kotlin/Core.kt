@@ -1,3 +1,5 @@
+import com.theevilroot.asyncsocket.CoroutineSocket
+import com.theevilroot.asyncsocket.SocksCoroutineSocket
 import kotlinx.coroutines.*
 import java.net.InetAddress
 import java.net.InetSocketAddress
@@ -93,13 +95,49 @@ suspend fun runCoroutineSocketTest(channel: AsynchronousSocketChannel, dispatche
     }
 }
 
+
+class TestCase(
+    val name: String,
+    val group: AsynchronousChannelGroup,
+    val f: suspend (AsynchronousChannelGroup) -> Unit
+) {
+
+    sealed class Result {
+        class Success(val case: TestCase): Result()
+        object Failure: Result()
+    }
+
+    suspend operator fun invoke(): Result {
+        return runCatching { f(group); Result.Success(this) }.recover {
+            println("$name test failure!")
+            println("${it.javaClass.simpleName}: ${it.localizedMessage}")
+            Result.Failure
+        }.getOrDefault(Result.Failure)
+    }
+}
+
+suspend infix fun TestCase.Result.dot(testCase: TestCase): TestCase.Result =
+    when (this) {
+        is TestCase.Result.Failure -> TestCase.Result.Failure
+        is TestCase.Result.Success -> testCase()
+    }
+
 fun main() {
     val thread = Executors.newFixedThreadPool(1)
     val group = AsynchronousChannelGroup.withThreadPool(thread)
     runBlocking {
-        runSocksHttpRequestTest(AsynchronousSocketChannel.open(group))
-        runRawHttpRequestTest(AsynchronousSocketChannel.open(group))
-        runCoroutineSocketTest(AsynchronousSocketChannel.open(group), thread.asCoroutineDispatcher())
+
+        val socksHttpCase = TestCase("socks http request", group) {
+            runSocksHttpRequestTest(AsynchronousSocketChannel.open(it))
+        }
+        val rawHttpCase = TestCase("raw http request", group) {
+            runRawHttpRequestTest(AsynchronousSocketChannel.open(it))
+        }
+        val clientServerCase = TestCase("client-server", group) {
+            runCoroutineSocketTest(AsynchronousSocketChannel.open(it), thread.asCoroutineDispatcher())
+        }
+
+        socksHttpCase()dot rawHttpCase dot clientServerCase
     }
     group.shutdownNow()
     group.awaitTermination(-1, TimeUnit.SECONDS)
