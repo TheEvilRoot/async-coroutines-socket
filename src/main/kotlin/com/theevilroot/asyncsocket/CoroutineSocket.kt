@@ -9,7 +9,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-open class CoroutineSocket (private val socket : AsynchronousSocketChannel) {
+open class CoroutineSocket(private val socket: AsynchronousSocketChannel) {
 
     open suspend fun connect(isa: InetSocketAddress) {
         suspendCoroutine<Void> {
@@ -42,5 +42,4 @@ open class CoroutineSocket (private val socket : AsynchronousSocketChannel) {
             attachment.resumeWithException(exc)
         }
     }
-
 }

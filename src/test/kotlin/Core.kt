@@ -1,6 +1,13 @@
 import com.theevilroot.asyncsocket.CoroutineSocket
 import com.theevilroot.asyncsocket.SocksCoroutineSocket
-import kotlinx.coroutines.*
+
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
@@ -34,15 +41,13 @@ suspend fun runSocksHttpRequestTest(channel: AsynchronousSocketChannel) {
         println("reading next 4 bytes...")
         val count = socket.read(buffer)
         println("read finished")
-        if (count <= 0)
-            break
+        if (count <= 0) break
         builder.append(buffer.array().copyOf(count).joinToString("") { it.toChar().toString() })
         buffer.clear()
     }
     println(builder.toString())
     socket.close()
 }
-
 
 suspend fun runRawHttpRequestTest(channel: AsynchronousSocketChannel) {
     println("opening raw socket...")
@@ -56,8 +61,7 @@ suspend fun runRawHttpRequestTest(channel: AsynchronousSocketChannel) {
         println("reading next 4 bytes...")
         val count = raw.read(buffer)
         println("read finished")
-        if (count <= 0)
-            break
+        if (count <= 0) break
         builder.append(buffer.array().copyOf(count).joinToString("") { it.toChar().toString() })
         buffer.clear()
     }
@@ -95,7 +99,6 @@ suspend fun runCoroutineSocketTest(channel: AsynchronousSocketChannel, dispatche
     }
 }
 
-
 class TestCase(
     val name: String,
     val group: AsynchronousChannelGroup,
@@ -103,8 +106,8 @@ class TestCase(
 ) {
 
     sealed class Result {
-        class Success(val case: TestCase): Result()
-        object Failure: Result()
+        class Success(val case: TestCase) : Result()
+        object Failure : Result()
     }
 
     suspend operator fun invoke(): Result {

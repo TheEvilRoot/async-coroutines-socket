@@ -11,9 +11,9 @@ class SocksCoroutineSocket(
     val socksIsa: InetSocketAddress,
     channel: AsynchronousSocketChannel,
     val credentials: Pair<String, String>? = null
-): CoroutineSocket(channel) {
+) : CoroutineSocket(channel) {
 
-    class SocksException(message: String): IOException(message)
+    class SocksException(message: String) : IOException(message)
 
     enum class Method { NO_AUTH, USER_PASS }
 
@@ -151,5 +151,4 @@ class SocksCoroutineSocket(
             if (it < 0) close()
         }
     }
-
 }
