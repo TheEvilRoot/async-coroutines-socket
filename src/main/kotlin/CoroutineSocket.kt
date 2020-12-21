@@ -1,3 +1,4 @@
+import kotlinx.coroutines.runBlocking
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousSocketChannel
@@ -7,24 +8,28 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class CoroutineSocket (private val socket : AsynchronousSocketChannel) {
+open class CoroutineSocket (private val socket : AsynchronousSocketChannel) {
 
-    suspend fun connect(isa: InetSocketAddress) {
+    open suspend fun connect(isa: InetSocketAddress) {
         suspendCoroutine<Void> {
             socket.connect(isa, it, ContinuationHandler<Void>())
         }
     }
 
-    suspend fun read(buffer: ByteBuffer): Int {
+    open suspend fun read(buffer: ByteBuffer): Int {
         return suspendCoroutine {
             socket.read(buffer, it, ContinuationHandler<Int>())
         }
     }
 
-    suspend fun write(buffer: ByteBuffer): Int {
+    open suspend fun write(buffer: ByteBuffer): Int {
         return suspendCoroutine {
             socket.write(buffer, it, ContinuationHandler<Int>())
         }
+    }
+
+    open suspend fun close() {
+        socket.close()
     }
 
     class ContinuationHandler<T> : CompletionHandler<T, Continuation<T>> {
