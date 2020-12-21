@@ -24,7 +24,8 @@ val req = "GET /?format=json HTTP/1.1\r\nConnection: close\r\nHost: api.ipify.or
 
 suspend fun runSocksHttpRequestTest(channel: AsynchronousSocketChannel) {
     println("opening socks5 socket...")
-    val socket = SocksCoroutineSocket(InetSocketAddress(InetAddress.getByName("192.168.100.58"), 1080), channel)
+    val socket = SocksCoroutineSocket(InetSocketAddress(InetAddress.getByName("localhost"), 1080), channel,
+        credentials = "theevilroot" to "blahblah")
     println("client created")
     socket.init()
     println("connecting...")

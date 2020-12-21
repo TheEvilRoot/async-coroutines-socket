@@ -37,3 +37,8 @@ also, schema of server-client communication example is simplified
 
 be aware of windows defender firewall. I just faced 'The semaphore timeout period has expired.' IOException on connect() stage.
 (also nvidia drivers has died once after a connect(), lol)
+
+todo
+-------
+
+- write tests using python lib: pproxy to test auth cases

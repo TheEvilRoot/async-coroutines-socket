@@ -102,6 +102,29 @@ class SocksCoroutineSocket(
         return InetSocketAddress(InetAddress.getByAddress(addr), port)
     }
 
+    private suspend fun socksUserPassNegotiations() {
+        if (credentials == null)
+            throw SocksException("server want to use user/pass authentication, but no credentials provided")
+        val (username, password) = credentials
+        if (username.length > 255 || password.length > 255)
+            throw SocksException("credentials is invalid. max length of username and password is 255")
+        val message = byteArrayOf(0x01, username.length.toByte(), *username.toByteArray(),
+            password.length.toByte(), *password.toByteArray())
+        ByteBuffer.wrap(message).also {
+            val count = super.write(it)
+            if (count < message.size)
+                throw SocksException("failed to write user/pass message. $count < ${message.size}")
+        }
+        val response = ByteBuffer.allocate(2).let {
+            val count = super.read(it)
+            if (count < 2)
+                throw SocksException("failed to read user/pass response. $count < 2")
+            it[1]
+        }
+        if (response != 0x00.toByte())
+            throw SocksException("authentication failure. server respond $response != 0x00")
+    }
+
     lateinit var method: Method
     lateinit var remoteIsa: InetSocketAddress
 
@@ -121,6 +144,10 @@ class SocksCoroutineSocket(
         super.connect(socksIsa)
         try {
             method = methodNegotiate()
+            when (method) {
+                Method.USER_PASS -> socksUserPassNegotiations()
+                else -> { }
+            }
         } catch (s: SocksException) {
             close()
             throw s
