@@ -11,10 +11,16 @@ import kotlin.coroutines.suspendCoroutine
 
 open class CoroutineSocket(private val socket: AsynchronousSocketChannel) {
 
+    var isConnected: Boolean = false
+        private set
+    val isOpened: Boolean
+        get() = socket.isOpen
+
     open suspend fun connect(isa: InetSocketAddress) {
         suspendCoroutine<Void> {
             socket.connect(isa, it, ContinuationHandler<Void>())
         }
+        isConnected = true
     }
 
     open suspend fun read(buffer: ByteBuffer): Int {
@@ -30,6 +36,9 @@ open class CoroutineSocket(private val socket: AsynchronousSocketChannel) {
     }
 
     open suspend fun close() {
+        isConnected = false
+        socket.shutdownInput()
+        socket.shutdownOutput()
         socket.close()
     }
 
