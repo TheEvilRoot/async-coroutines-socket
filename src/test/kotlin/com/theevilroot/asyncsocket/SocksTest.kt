@@ -1,4 +1,5 @@
-import com.theevilroot.asyncsocket.SocksCoroutineSocket
+package com.theevilroot.asyncsocket
+
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Before
@@ -16,7 +17,7 @@ class SocksTest {
     }
 
     @Test
-    suspend fun testNoAuth() {
+    fun testNoAuth(): Unit = runBlocking {
         val socket = SocksCoroutineSocket(InetSocketAddress("localhost", 1081), channel)
         socket.init()
         socket.connect(InetSocketAddress("52.48.142.75", 80))
@@ -30,7 +31,7 @@ class SocksTest {
     }
 
     @Test
-    suspend fun testUserPassAuthCorrect() {
+    fun testUserPassAuthCorrect(): Unit = runBlocking {
         val credentials = "username" to "password"
         val socket = SocksCoroutineSocket(InetSocketAddress("localhost", 1080), channel, credentials)
         socket.init()
@@ -46,8 +47,8 @@ class SocksTest {
 
 
     @Test
-    suspend fun testUserPassAuthIncorrect() {
-        val credentials = "blah" to "password"
+    fun testUserPassAuthIncorrect(): Unit = runBlocking {
+        val credentials = "username" to "blah"
         val socket = SocksCoroutineSocket(InetSocketAddress("localhost", 1080), channel, credentials)
         Assert.assertThrows(SocksCoroutineSocket.SocksException::class.java) {
             runBlocking { socket.init() }
@@ -55,16 +56,22 @@ class SocksTest {
     }
 
     @Test
-    suspend fun testUserPassAuthWithoutCredentials() {
+    fun testUserPassAuthWithoutCredentials(): Unit = runBlocking {
         val socket = SocksCoroutineSocket(InetSocketAddress("localhost", 1080), channel)
-        Assert.assertThrows(SocksCoroutineSocket.SocksException::class.java) {
-            runBlocking { socket.init() }
-        }
+        socket.init()
+        socket.connect(InetSocketAddress("52.48.142.75", 80))
+
+        Assert.assertTrue(socket.isOpened)
+        Assert.assertTrue(socket.isConnected)
+
+        Assert.assertEquals(SocksCoroutineSocket.Method.NO_AUTH, socket.method)
+
+        socket.close()
     }
 
     @Test
-    suspend fun testCredentialsWithNoAuthServer() {
-        val credentials = "blah" to "password"
+    fun testCredentialsWithNoAuthServer(): Unit = runBlocking {
+        val credentials = "username" to "blah"
         val socket = SocksCoroutineSocket(InetSocketAddress("localhost", 1081), channel, credentials)
         socket.init()
         socket.connect(InetSocketAddress("52.48.142.75", 80))

@@ -42,3 +42,4 @@ todo
 -------
 
 - write tests using python lib: pproxy to test auth cases
+- find or create socks5 server that allows to disable default no-credentials auth

@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+    testImplementation("junit:junit:4.13")
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
