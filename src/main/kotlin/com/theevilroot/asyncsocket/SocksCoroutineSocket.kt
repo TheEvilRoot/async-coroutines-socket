@@ -47,7 +47,7 @@ class SocksCoroutineSocket(
         val methods = if (credentials == null) {
             byteArrayOf(0x00)
         } else {
-            byteArrayOf(0x02, 0x00)
+            byteArrayOf(0x02)
         }
         val message = byteArrayOf(0x05, methods.size.toByte(), *methods)
         ByteBuffer.wrap(message).let {
