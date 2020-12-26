@@ -5,5 +5,3 @@ RUN python3 -m pip install pproxy
 
 COPY . /tmp
 WORKDIR /tmp
-RUN ./run_tests.sh
-
