@@ -13,8 +13,6 @@ class SocksCoroutineSocket(
     val credentials: Pair<String, String>? = null
 ) : CoroutineSocket(channel) {
 
-    class SocksException(message: String) : IOException(message)
-
     enum class Method { NO_AUTH, USER_PASS }
 
     enum class AddressType(val id: Byte) {
