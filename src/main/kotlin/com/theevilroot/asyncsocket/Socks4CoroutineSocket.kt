@@ -10,7 +10,7 @@ import java.nio.channels.AsynchronousSocketChannel
 class Socks4CoroutineSocket(
     val socksIsa: InetSocketAddress,
     channel: AsynchronousSocketChannel,
-    userId: String
+    val userId: String
 ) : CoroutineSocket(channel) {
 
     lateinit var remoteIsa: InetSocketAddress
@@ -19,7 +19,9 @@ class Socks4CoroutineSocket(
         val message = byteArrayOf(0x04, 0x01,
             (isa.port shr 8).toByte(),
             (isa.port and 0xff).toByte(),
-            *isa.address.address)
+            *isa.address.address,
+            *userId.toByteArray(),
+            0x00.toByte())
         ByteBuffer.wrap(message).let {
             val count = super.write(it)
             if (count < message.size)
@@ -38,7 +40,7 @@ class Socks4CoroutineSocket(
         val bPort = ByteArray(2)
         response.position(2)
         response.get(bPort, 0, 2)
-        response.get(bPort, 0, 4)
+        response.get(addr, 0, 4)
         val port = (bPort[0].toUByte().toInt() shl 8) + bPort[1].toUByte().toInt()
         return InetSocketAddress(InetAddress.getByAddress(addr), port)
     }

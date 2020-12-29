@@ -50,7 +50,7 @@ class SocksTest {
     fun testUserPassAuthIncorrect(): Unit = runBlocking {
         val credentials = "username" to "blah"
         val socket = SocksCoroutineSocket(InetSocketAddress("localhost", 1080), channel, credentials)
-        Assert.assertThrows(SocksCoroutineSocket.SocksException::class.java) {
+        Assert.assertThrows(SocksException::class.java) {
             runBlocking { socket.init() }
         }
     }
