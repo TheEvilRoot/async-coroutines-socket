@@ -29,12 +29,15 @@ class Socks4Test {
         val request = "GET /?format=json HTTP/1.1\r\nConnection: close\r\nHost: api.ipify.org\r\nAccept: */*\r\nUser-Agent: curl/1.1.1\r\n\r\n"
         Assert.assertEquals(request.length, socket.write(ByteBuffer.wrap(request.toByteArray())))
 
-
         // read some data, we don't need much
         val response = ByteBuffer.allocate(32)
         Assert.assertTrue(socket.read(response) > 0)
 
+        val http = ByteArray(4)
+        response.position(0)
+        response.get(http, 0, 4)
+        Assert.assertTrue(http.contentEquals("HTTP".toByteArray()))
+
         socket.close()
     }
-
 }

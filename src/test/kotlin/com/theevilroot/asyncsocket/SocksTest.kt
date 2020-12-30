@@ -45,7 +45,6 @@ class SocksTest {
         socket.close()
     }
 
-
     @Test
     fun testUserPassAuthIncorrect(): Unit = runBlocking {
         val credentials = "username" to "blah"

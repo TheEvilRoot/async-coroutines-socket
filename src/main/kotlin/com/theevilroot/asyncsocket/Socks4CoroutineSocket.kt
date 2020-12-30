@@ -1,7 +1,5 @@
 package com.theevilroot.asyncsocket
 
-import java.lang.Exception
-import java.net.ConnectException
 import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer

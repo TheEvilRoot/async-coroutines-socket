@@ -22,16 +22,16 @@ fi
 
 if [ $# -eq 1 ]
   then
-    echo ':: using no auth. port: 1081'
+    echo ":: using $protocol no auth. port: $port"
     pproxy -l "$protocol://0.0.0.0:$port"
     exit 0
 fi
 
 if [ $# -eq 3 ]
   then
-     echo ':: using user/pass auth. port: 1080'
      port=1080
-     pproxy -l "$protocol://0.0.0.0:$port#$1:$2"
+     echo ":: using $protocol user/pass auth. port: $port"
+     pproxy -l "$protocol://0.0.0.0:$port#$2:$3"
      exit 0
 fi
 
