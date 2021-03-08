@@ -52,7 +52,7 @@ suspend fun runSocksHttpRequestTest(channel: AsynchronousSocketChannel) {
 
 suspend fun runRawHttpRequestTest(channel: AsynchronousSocketChannel) {
     println("opening raw socket...")
-    val raw = CoroutineSocket(channel)
+    val raw = CoroutineSocket(channel, null)
     raw.connect(InetSocketAddress("api.ipify.org", 80))
     ByteBuffer.wrap(req).let { raw.write(it) }
 
@@ -71,7 +71,7 @@ suspend fun runRawHttpRequestTest(channel: AsynchronousSocketChannel) {
 }
 
 suspend fun runCoroutineSocketTest(channel: AsynchronousSocketChannel, dispatcher: CoroutineDispatcher) = withContext(dispatcher) {
-    val socket = CoroutineSocket(channel)
+    val socket = CoroutineSocket(channel, null)
 
     launch {
         socket.connect(InetSocketAddress("localhost", 9999))

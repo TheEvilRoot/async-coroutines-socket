@@ -5,12 +5,14 @@ import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousSocketChannel
+import java.util.concurrent.TimeUnit
 
 class SocksCoroutineSocket(
     val socksIsa: InetSocketAddress,
     channel: AsynchronousSocketChannel,
-    val credentials: Pair<String, String>? = null
-) : CoroutineSocket(channel) {
+    val credentials: Pair<String, String>? = null,
+    readTimeout: Pair<Long, TimeUnit>? = null
+) : CoroutineSocket(channel, readTimeout) {
 
     enum class Method { NO_AUTH, USER_PASS }
 

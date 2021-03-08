@@ -4,12 +4,16 @@ import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousSocketChannel
 import java.nio.channels.CompletionHandler
+import java.util.concurrent.TimeUnit
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-open class CoroutineSocket(private val socket: AsynchronousSocketChannel) {
+open class CoroutineSocket(
+    private val socket: AsynchronousSocketChannel,
+    private val readTimeout: Pair<Long, TimeUnit>?
+) {
 
     var isConnected: Boolean = false
         private set
@@ -25,7 +29,12 @@ open class CoroutineSocket(private val socket: AsynchronousSocketChannel) {
 
     open suspend fun read(buffer: ByteBuffer): Int {
         return suspendCoroutine {
-            socket.read(buffer, it, ContinuationHandler<Int>())
+            if (readTimeout != null) {
+                socket.read(buffer, readTimeout.first,
+                    readTimeout.second, it, ContinuationHandler<Int>())
+            } else {
+                socket.read(buffer, it, ContinuationHandler<Int>())
+            }
         }
     }
 

@@ -4,12 +4,14 @@ import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousSocketChannel
+import java.util.concurrent.TimeUnit
 
 class Socks4CoroutineSocket(
     val socksIsa: InetSocketAddress,
     channel: AsynchronousSocketChannel,
-    val userId: String
-) : CoroutineSocket(channel) {
+    val userId: String,
+    readTimeout: Pair<Long, TimeUnit>? = null
+) : CoroutineSocket(channel, readTimeout) {
 
     lateinit var remoteIsa: InetSocketAddress
 
