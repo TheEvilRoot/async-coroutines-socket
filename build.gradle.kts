@@ -1,8 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     `maven-publish`
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.5.21"
 }
 
 group = "me.theevilroot"
@@ -14,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
     testImplementation("junit:junit:4.13")
 }
 
@@ -24,12 +25,34 @@ val sourcesJar by tasks.registering(Jar::class) {
 }
 
 publishing {
+    repositories {
+        maven {
+            val localProps = Properties()
+            if (rootProject.file("local.properties").exists())
+                localProps.load(rootProject.file("local.properties").reader())
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/TheEvilRoot/async-coroutines-socket")
+            credentials {
+                username = localProps.getOrDefault("gpr.user",
+                    System.getenv("USERNAME")) as? String?
+                password = localProps.getOrDefault("gpr.key",
+                    System.getenv("TOKEN")) as? String?
+            }
+        }
+    }
     publications {
         create<MavenPublication>("maven") {
             groupId = "me.theevilroot"
             artifactId = "coroutine-async-socket"
             version = version
             from(components["java"])
+        }
+        register<MavenPublication>("gpr") {
+            groupId = "me.theevilroot"
+            artifactId = "coroutine-async-socket"
+            version = version
+            from(components["java"])
+            artifact(sourcesJar.get())
         }
         register("mavenJava", MavenPublication::class) {
             from(components["java"])
