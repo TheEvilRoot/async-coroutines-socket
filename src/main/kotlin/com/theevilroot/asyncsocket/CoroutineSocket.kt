@@ -46,9 +46,9 @@ open class CoroutineSocket(
 
     open suspend fun close() {
         isConnected = false
-        socket.shutdownInput()
-        socket.shutdownOutput()
-        socket.close()
+        runCatching { socket.close() }
+        runCatching { socket.shutdownInput() }
+        runCatching { socket.shutdownOutput() }
     }
 
     class ContinuationHandler<T> : CompletionHandler<T, Continuation<T>> {
