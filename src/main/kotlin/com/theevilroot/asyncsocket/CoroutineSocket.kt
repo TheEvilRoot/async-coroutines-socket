@@ -21,7 +21,7 @@ open class CoroutineSocket(
         get() = socket.isOpen
 
     open suspend fun connect(isa: InetSocketAddress) {
-        suspendCoroutine<Void> {
+        suspendCoroutine {
             socket.connect(isa, it, ContinuationHandler<Void>())
         }
         isConnected = true
@@ -30,8 +30,13 @@ open class CoroutineSocket(
     open suspend fun read(buffer: ByteBuffer): Int {
         return suspendCoroutine {
             if (readTimeout != null) {
-                socket.read(buffer, readTimeout.first,
-                    readTimeout.second, it, ContinuationHandler<Int>())
+                socket.read(
+                    buffer,
+                    readTimeout.first,
+                    readTimeout.second,
+                    it,
+                    ContinuationHandler<Int>(),
+                )
             } else {
                 socket.read(buffer, it, ContinuationHandler<Int>())
             }

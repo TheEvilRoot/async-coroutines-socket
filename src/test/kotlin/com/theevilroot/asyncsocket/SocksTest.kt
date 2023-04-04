@@ -20,7 +20,7 @@ class SocksTest {
     fun testNoAuth(): Unit = runBlocking {
         val socket = SocksCoroutineSocket(InetSocketAddress("localhost", 1081), channel)
         socket.init()
-        socket.connect(InetSocketAddress("52.48.142.75", 80))
+        socket.connect(InetSocketAddress("example.com", 80))
 
         Assert.assertTrue(socket.isOpened)
         Assert.assertTrue(socket.isConnected)
@@ -35,7 +35,7 @@ class SocksTest {
         val credentials = "username" to "password"
         val socket = SocksCoroutineSocket(InetSocketAddress("localhost", 1080), channel, credentials)
         socket.init()
-        socket.connect(InetSocketAddress("52.48.142.75", 80))
+        socket.connect(InetSocketAddress("example.com", 80))
 
         Assert.assertTrue(socket.isOpened)
         Assert.assertTrue(socket.isConnected)
@@ -58,7 +58,7 @@ class SocksTest {
     fun testUserPassAuthWithoutCredentials(): Unit = runBlocking {
         val socket = SocksCoroutineSocket(InetSocketAddress("localhost", 1080), channel)
         socket.init()
-        socket.connect(InetSocketAddress("52.48.142.75", 80))
+        socket.connect(InetSocketAddress("example.com", 80))
 
         Assert.assertTrue(socket.isOpened)
         Assert.assertTrue(socket.isConnected)
@@ -73,7 +73,7 @@ class SocksTest {
         val credentials = "username" to "blah"
         val socket = SocksCoroutineSocket(InetSocketAddress("localhost", 1081), channel, credentials)
         socket.init()
-        socket.connect(InetSocketAddress("52.48.142.75", 80))
+        socket.connect(InetSocketAddress("example.com", 80))
 
         Assert.assertTrue(socket.isOpened)
         Assert.assertTrue(socket.isConnected)

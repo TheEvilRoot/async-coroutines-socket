@@ -21,7 +21,7 @@ class Socks4Test {
     fun testSocks4Connect(): Unit = runBlocking {
         val socket = Socks4CoroutineSocket(InetSocketAddress("127.0.0.1", 1082), channel, "user")
         socket.init()
-        socket.connect(InetSocketAddress("52.48.142.75", 80))
+        socket.connect(InetSocketAddress("api.ipify.org", 80))
 
         Assert.assertTrue(socket.isOpened)
         Assert.assertTrue(socket.isConnected)
@@ -31,7 +31,8 @@ class Socks4Test {
 
         // read some data, we don't need much
         val response = ByteBuffer.allocate(32)
-        Assert.assertTrue(socket.read(response) > 0)
+        val count = socket.read(response)
+        Assert.assertTrue("count was $count", count > 0)
 
         val http = ByteArray(4)
         response.position(0)

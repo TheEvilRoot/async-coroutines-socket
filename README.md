@@ -17,7 +17,7 @@ is called with either success or failure method.
 But using callback based socket is inconvenient after all. It's commonly causes lots of lambdas, interfaces and 
 indentation levels. 
 
-Here's out library comes in. Using a `suspendCoroutine` and `Continuation` mechanism in kotlin coroutines
+Here's our library comes in. Using a `suspendCoroutine` and `Continuation` mechanism in kotlin coroutines
 we're wrapped a callback based functions into coroutine-blocking function. 
 
 It's just blocking a current coroutine on connect/read/write call and resume it on callback functions -- success or failure.

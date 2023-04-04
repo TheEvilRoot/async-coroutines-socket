@@ -3,20 +3,19 @@ import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     `maven-publish`
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm") version "1.8.20"
 }
 
 group = "me.theevilroot"
-version = "1.1"
+version = "1.2"
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
-    testImplementation("junit:junit:4.13")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    testImplementation("junit:junit:4.13.2")
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
