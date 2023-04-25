@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     `maven-publish`
-    kotlin("jvm") version "1.8.20"
+    kotlin("jvm") version "1.8.21"
 }
 
 group = "me.theevilroot"
