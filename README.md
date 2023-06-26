@@ -3,6 +3,9 @@ async-coroutines-socket
 
 is a small kotlin library that provides an implementation for `java.nio.channels.AsynchronousSocketChannel` wrapped in kotlin coroutines.
 
+[![Kotlin Linter](https://github.com/TheEvilRoot/async-coroutines-socket/actions/workflows/klinter.yml/badge.svg)](https://github.com/TheEvilRoot/async-coroutines-socket/actions/workflows/klinter.yml)
+[![Socks5 tests](https://github.com/TheEvilRoot/async-coroutines-socket/actions/workflows/docker-image.yml/badge.svg)](https://github.com/TheEvilRoot/async-coroutines-socket/actions/workflows/docker-image.yml)
+
 preamble
 --------
 
