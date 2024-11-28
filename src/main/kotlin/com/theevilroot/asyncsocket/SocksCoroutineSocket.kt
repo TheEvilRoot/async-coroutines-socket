@@ -87,7 +87,7 @@ class SocksCoroutineSocket(
             0x01,
             *isa.address.address,
             (isa.port shr 8).toByte(),
-            (isa.port and 0xff).toByte(),
+            (isa.port and 0xff).toByte()
         )
         ByteBuffer.wrap(message).let {
             val count = super.write(it)
@@ -129,7 +129,7 @@ class SocksCoroutineSocket(
             username.length.toByte(),
             *username.toByteArray(),
             password.length.toByte(),
-            *password.toByteArray(),
+            *password.toByteArray()
         )
         ByteBuffer.wrap(message).also {
             val count = super.write(it)

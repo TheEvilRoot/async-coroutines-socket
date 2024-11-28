@@ -23,7 +23,7 @@ class Socks4CoroutineSocket(
             (isa.port and 0xff).toByte(),
             *isa.address.address,
             *userId.toByteArray(),
-            0x00.toByte(),
+            0x00.toByte()
         )
         ByteBuffer.wrap(message).let {
             val count = super.write(it)
