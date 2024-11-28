@@ -10,7 +10,7 @@ class Socks4CoroutineSocket(
     val socksIsa: InetSocketAddress,
     channel: AsynchronousSocketChannel,
     val userId: String,
-    readTimeout: Pair<Long, TimeUnit>? = null,
+    readTimeout: Pair<Long, TimeUnit>? = null
 ) : CoroutineSocket(channel, readTimeout) {
 
     lateinit var remoteIsa: InetSocketAddress

@@ -35,7 +35,7 @@ open class CoroutineSocket(
                     readTimeout.first,
                     readTimeout.second,
                     it,
-                    ContinuationHandler<Int>(),
+                    ContinuationHandler<Int>()
                 )
             } else {
                 socket.read(buffer, it, ContinuationHandler<Int>())

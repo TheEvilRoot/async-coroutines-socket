@@ -11,7 +11,7 @@ class SocksCoroutineSocket(
     val socksIsa: InetSocketAddress,
     channel: AsynchronousSocketChannel,
     val credentials: Pair<String, String>? = null,
-    readTimeout: Pair<Long, TimeUnit>? = null,
+    readTimeout: Pair<Long, TimeUnit>? = null
 ) : CoroutineSocket(channel, readTimeout) {
 
     enum class Method { NO_AUTH, USER_PASS }
