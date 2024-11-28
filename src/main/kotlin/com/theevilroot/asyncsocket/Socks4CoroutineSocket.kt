@@ -39,7 +39,7 @@ class Socks4CoroutineSocket(
         }
         if (response[1] != 90.toByte()) {
             throw SocksException(
-                "failed to connect to remote server through proxy. socks error: ${String.format("%02x", response[1])}",
+                "failed to connect to remote server through proxy. socks error: ${String.format("%02x", response[1])}"
             )
         }
 
